@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<XnaContent>
+	<Asset Type="TankGameLibrary.SubTexture[]">
+		<Item>
+			<Name>barrelBlack_side.png</Name>
+			<Xpos>513</Xpos>
+			<Ypos>407</Ypos>
+			<Width>20</Width>
+			<Height>28</Height>
+		</Item>
+	</Asset>
+</XnaContent>
