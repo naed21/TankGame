@@ -81,5 +81,54 @@ namespace TankGame
 				}
 			}
 		}
+
+		/// <summary>
+		/// Get the tile pos based on the row and column provided
+		/// </summary>
+		/// <param name="row"></param>
+		/// <param name="column"></param>
+		/// <returns></returns>
+		public Vector2 GetTilePos(int column, int row)
+		{
+			//Make sure the values fit in the correct range
+			if (column >= _columns)
+				column = _columns - 1;
+			else if (column < 0)
+				column = 0;
+
+			if (row >= _rows)
+				row = _rows - 1;
+			else if (row < 0)
+				row = 0;
+
+			float x = column * _tileSize + _offsetX;
+			float y = row * _tileSize + _offsetY;
+
+			return new Vector2(x, y);
+		}
+
+		/// <summary>
+		/// Get the row and column closest to the Vector2 provided
+		/// </summary>
+		/// <param name="pos"></param>
+		/// <returns></returns>
+		public Point GetTile(Vector2 pos)
+		{
+			int targetColumn = ((int)pos.X - _offsetX) / _tileSize;
+			int targetRow = ((int)pos.Y - _offsetY) / _tileSize;
+
+			//since we're starting at 0, need to be 1 less than max
+			if (targetColumn >= _columns)
+				targetColumn = _columns - 1;
+			else if (targetColumn < 0)
+				targetColumn = 0;
+
+			if (targetRow >= _rows)
+				targetRow = _rows - 1;
+			else if (targetRow < 0)
+				targetRow = 0;
+
+			return new Point(targetColumn, targetRow);
+		}
 	}
 }

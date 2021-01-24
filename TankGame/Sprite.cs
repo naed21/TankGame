@@ -37,9 +37,11 @@ namespace TankGame
 				spriteBatch.Draw(_texture, Position, _sourceRect, Tint);
 		}
 
-		public virtual Sprite Clone()
+		public virtual Sprite Clone(Sprite newSprite = null)
 		{
-			Sprite newSprite = new Sprite();
+			//Allow inherited classes to create the obj
+			if(newSprite == null)
+				newSprite = new Sprite();
 			//texture is by ref, but that's good
 			//Don't want to have multiple copies of the same texture
 			newSprite._texture = this._texture;

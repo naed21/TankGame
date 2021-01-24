@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using TankGameLibrary;
 
 namespace TankGame
 {
@@ -22,6 +21,9 @@ namespace TankGame
 		TileMap _map = null;
 
 		Menu _mainMenu = null;
+
+		PlayerController _pController = null;
+		Tank _baseTank = null;
 
 		public Game1()
 		{
@@ -101,6 +103,11 @@ namespace TankGame
 			_mainMenu.AddButton(editorButton);
 			_mainMenu.AddButton(gameButton);
 			_mainMenu.AddButton(quitButton);
+
+			_baseTank = new Tank();
+			_baseTank.Load(_tileSheet, _textureAtlas.GetRectangle("tankBody_blue"));
+			//Need to set the height/width or else you get a dumb bug where it doesn't draw
+			_baseTank.Position = new Rectangle(0, 0, 38, 38);
 		}
 
 		MouseState? _prevMouseState = null;
@@ -169,7 +176,23 @@ namespace TankGame
 			}
 			else if(_gameState == GameState.Game)
 			{
+				//Make sure we fill the map if we never went to the editor!
+				if (defaultFillMap)
+				{
+					defaultFillMap = false;
+					_map.Fill(_tileSprites[0].Clone());
+				}
 
+				if (_pController == null)
+				{
+					//We just switched to this so setup stuff
+					_pController = new PlayerController();
+					//We know that the clone creates it as a "Tank" so ok to force coversion
+					Tank player = (Tank)_baseTank.Clone();
+					_pController.Setup(player, _map, Point.Zero);
+				}
+
+				_pController.Update(mouseState, keyState, gameTime);
 			}
 
 			_prevMouseState = mouseState;
@@ -191,6 +214,14 @@ namespace TankGame
 			else if (_gameState == GameState.Menu)
 			{
 				_mainMenu.Draw(_spriteBatch, gameTime);
+			}
+			else if(_gameState == GameState.Game)
+			{
+				//draw the map first so player is ontop of the map!
+				_map.Draw(_spriteBatch, gameTime);
+				//Since the update sets the controller, its null the first time we change the game state
+				if(_pController != null)
+					_pController.Draw(_spriteBatch, gameTime);
 			}
 
 			_spriteBatch.End();
